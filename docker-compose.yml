@@ -22,8 +22,6 @@ services:
       # Use single node discovery in order to disable production mode and avoid bootstrap checks.
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
-    networks:
-      - microservices-bridge-network
 
   logstash:
     build:
@@ -46,8 +44,6 @@ services:
       - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - microservices-bridge-network
     depends_on:
       - elasticsearch
 
@@ -63,14 +59,13 @@ services:
         read_only: true
     ports:
       - "5601:5601"
-    networks:
-      - microservices-bridge-network
     depends_on:
       - elasticsearch
 
 networks:
-  microservices-bridge-network:
-     external: true
+  default:
+    external:
+      name: microservices-connection-network
 
 volumes:
   elasticsearch:
